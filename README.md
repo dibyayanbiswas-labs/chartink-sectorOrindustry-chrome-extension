@@ -39,11 +39,7 @@ This extension:
 
 MIT License
 
-## Author
-
-[Dibyayan Biswas]
-
-### Test Everything
+## Test Everything
 
 - Extension loads without errors
 - Works on ChartInk
@@ -53,8 +49,6 @@ MIT License
 - Icons display properly
 - No console errors
 
-### Images
+## Images
 ![Chartink Sector Column](https://github.com/dblabs25/chartink-sectorOrindustry-chrome-extension/blob/main/images/sector.png)
 ![Chartink Industry Column](https://github.com/dblabs25/chartink-sectorOrindustry-chrome-extension/blob/main/images/industry.png)
-
-Support: [dblabs25@gmail.com]
