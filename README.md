@@ -7,8 +7,7 @@ Chrome extension that automatically adds Sector/Industry columns to ChartInk sto
 - Automatically adds Sector or Industry column to ChartInk tables
 - Fetches data from NSE (National Stock Exchange)
 - 24-hour caching to reduce API calls
-- Toggle between Sector and Industry view
-- Hover to see full details
+- Toggle between Sector and Industry results
 
 ## Installation
 
@@ -46,8 +45,6 @@ MIT License
 
 ### Test Everything
 
-Before publishing, thoroughly test:
-
 - Extension loads without errors
 - Works on ChartInk
 - Popup functions correctly
@@ -56,19 +53,8 @@ Before publishing, thoroughly test:
 - Icons display properly
 - No console errors
 
----
-
-💡 HOW TO USE:
-
-1. Install the extension
-2. Go to any ChartInk page with a stock table
-3. Watch the Sector column appear automatically!
-4. Click the extension icon to customize settings
-
-⚡ INSTANT & LIGHTWEIGHT:
-
-- Minimal performance impact
-- Works seamlessly with ChartInk
-- No page slowdowns
+### Images
+![Chartink Sector Column](https://github.com/dblabs25/chartink-sectorOrindustry-chrome-extension/blob/main/images/sector.png)
+![Chartink Industry Column](https://github.com/dblabs25/chartink-sectorOrindustry-chrome-extension/blob/main/images/industry.png)
 
 Support: [dblabs25@gmail.com]
