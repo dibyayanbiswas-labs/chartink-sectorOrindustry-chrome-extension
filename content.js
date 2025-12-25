@@ -35,6 +35,9 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     }
 });
 
+// Store all sector cells for later highlighting
+let sectorCells = [];
+
 async function addSectorColumn() {
     const table = document.querySelector('table.whitespace-nowrap');
     
@@ -47,6 +50,9 @@ async function addSectorColumn() {
         console.log('Sector column already exists');
         return;
     }
+    
+    // Reset cells array
+    sectorCells = [];
     
     // Add header
     const headerRow = table.querySelector('thead tr');
@@ -103,6 +109,9 @@ async function addSectorColumn() {
         sectorCell.style.cssText = 'padding: 12px;';
         sectorCell.textContent = 'Loading...';
         sectorCell.style.color = '#999';
+        
+        // Store cell for later highlighting
+        sectorCells.push(sectorCell);
         
         // Find where to insert - same position as header
         const headers = Array.from(headerRow.querySelectorAll('th'));
@@ -169,7 +178,12 @@ function updateDataCells(value) {
     });
     
     console.log(`Updated ${dataCells.length} data cells to show: ${value}`);
+    
+    // Re-apply highlighting after update
+    highlightRepeatedValues();
 }
+
+let loadedCellsCount = 0;
 
 async function fetchSectorForSymbol(symbol, cell) {
     try {
@@ -203,10 +217,24 @@ async function fetchSectorForSymbol(symbol, cell) {
                         } else {
                             cell.style.fontWeight = '500';
                         }
+                        
+                        // Track loaded cells
+                        loadedCellsCount++;
+                        
+                        // When all cells are loaded, apply highlighting
+                        if (loadedCellsCount === sectorCells.length) {
+                            console.log('All sectors loaded, applying highlighting...');
+                            setTimeout(() => highlightRepeatedValues(), 500);
+                        }
                     });
                 } else {
                     cell.textContent = 'Error';
                     cell.style.color = '#f44336';
+                    
+                    loadedCellsCount++;
+                    if (loadedCellsCount === sectorCells.length) {
+                        setTimeout(() => highlightRepeatedValues(), 500);
+                    }
                 }
             }
         );
@@ -217,8 +245,94 @@ async function fetchSectorForSymbol(symbol, cell) {
     }
 }
 
+// NEW: Function to highlight repeated values (3+ occurrences)
+function highlightRepeatedValues() {
+    const dataCells = document.querySelectorAll('td.sector-column');
+    
+    // Count occurrences of each value
+    const valueCounts = {};
+    
+    dataCells.forEach(cell => {
+        const value = cell.textContent.trim();
+        
+        // Skip Loading, Error, and Unknown
+        if (value === 'Loading...' || value === 'Error' || value === 'Unknown' || value === '') {
+            return;
+        }
+        
+        valueCounts[value] = (valueCounts[value] || 0) + 1;
+    });
+    
+    // Find values that appear 3+ times
+    const repeatedValues = Object.keys(valueCounts).filter(value => valueCounts[value] >= 3);
+    
+    console.log('Value counts:', valueCounts);
+    console.log('Values appearing 3+ times:', repeatedValues);
+    
+    // Apply highlighting
+    dataCells.forEach(cell => {
+        const value = cell.textContent.trim();
+        
+        if (repeatedValues.includes(value)) {
+            // Apply highlight with a subtle background
+            cell.style.backgroundColor = getHighlightColor(value);
+            cell.style.borderRadius = '4px';
+            cell.style.padding = '8px 12px';
+            
+            // Add a small badge showing count
+            const count = valueCounts[value];
+            if (!cell.querySelector('.count-badge')) {
+                const badge = document.createElement('span');
+                badge.className = 'count-badge';
+                badge.textContent = ` (${count})`;
+                badge.style.cssText = `
+                    font-size: 10px;
+                    opacity: 0.7;
+                    margin-left: 4px;
+                `;
+                cell.appendChild(badge);
+            }
+        } else {
+            // Remove highlighting for values that don't repeat enough
+            cell.style.backgroundColor = '';
+            const badge = cell.querySelector('.count-badge');
+            if (badge) badge.remove();
+        }
+    });
+    
+    // Log statistics
+    if (repeatedValues.length > 0) {
+        console.log(`Highlighted ${repeatedValues.length} repeated values`);
+    }
+}
+
+// NEW: Get highlight color based on value
+function getHighlightColor(value) {
+    // Use a hash function to get consistent colors for same values
+    let hash = 0;
+    for (let i = 0; i < value.length; i++) {
+        hash = value.charCodeAt(i) + ((hash << 5) - hash);
+    }
+    
+    // Predefined pastel colors for better readability
+    const colors = [
+        'rgba(233, 71, 95, 0.6)',  
+        'rgba(46, 234, 61, 0.6)',
+        'rgba(59, 163, 237, 0.6)',
+        'rgba(222, 179, 37, 0.6)', 
+        'rgba(227, 156, 238, 0.6)',
+        'rgba(38, 184, 203, 0.6)',
+        'rgba(187, 129, 36, 0.6)',
+        'rgba(46, 68, 195, 0.6)',
+    ];
+    
+    return colors[Math.abs(hash) % colors.length];
+}
+
 function removeSectorColumn() {
     document.querySelectorAll('.sector-column').forEach(el => el.remove());
+    sectorCells = [];
+    loadedCellsCount = 0;
     console.log('Sector column removed');
 }
 
@@ -226,6 +340,7 @@ function removeSectorColumn() {
 const observer = new MutationObserver(() => {
     if (extensionEnabled && !document.querySelector('.sector-column')) {
         console.log('Table changed, re-adding sector column');
+        loadedCellsCount = 0;
         addSectorColumn();
     }
 });

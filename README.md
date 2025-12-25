@@ -5,6 +5,7 @@ Chrome extension that automatically adds Sector/Industry columns to ChartInk sto
 ## Features
 
 - Automatically adds Sector or Industry column to ChartInk tables
+- Highlights if 3 or more similar sector with unique color
 - Fetches data from NSE (National Stock Exchange)
 - 24-hour caching to reduce API calls
 - Toggle between Sector and Industry results
@@ -45,6 +46,7 @@ MIT License
 - Works on ChartInk
 - Popup functions correctly
 - Toggle between Sector/Industry works
+- Highlights if 3 or more similar sector with unique color
 - Refresh and Clear Cache work
 - Icons display properly
 - No console errors
