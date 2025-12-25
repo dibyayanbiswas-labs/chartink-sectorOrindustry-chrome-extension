@@ -1,0 +1,43 @@
+{
+  "manifest_version": 3,
+  "name": "ChartInk Sector Column",
+  "version": "1.0.0",
+  "description": "Adds sector/industry column to ChartInk stock tables with data from NSE",
+  
+  "permissions": [
+    "storage",
+    "activeTab"
+  ],
+  
+  "host_permissions": [
+    "https://chartink.com/*",
+    "https://www.nseindia.com/*"
+  ],
+  
+  "content_scripts": [
+    {
+      "matches": ["https://chartink.com/*"],
+      "js": ["content.js"],
+      "run_at": "document_idle"
+    }
+  ],
+  
+  "action": {
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
+    }
+  },
+  
+  "background": {
+    "service_worker": "background.js"
+  },
+  
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  }
+}

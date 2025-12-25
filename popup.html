@@ -1,0 +1,41 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chartink Sector Extension</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <h2> Chartink Sector Extension</h2>
+
+    <div class="setting">
+        <label>
+            <input type="checkbox" name="" id="enableExtension" checked>
+            Enable Extension
+        </label>
+    </div>
+
+    <div class="setting">
+        <label>
+            <input type="checkbox" name="" id="autoRefresh">
+            Auto Refresh Data
+        </label>
+    </div>
+
+    <div class="setting">
+        <label for="toggleSectorOrIndustry">
+            <select id="toggleSectorOrIndustry">
+                <option value="sector">Sector</option>
+                <option value="industry">Industry</option>
+            </select>
+        </label>
+    </div>
+
+    <button id="refreshButton"> Refresh Button </button>
+    <button id="clearCache"> Clear Cache </button>
+
+    <div class="status" id="status"></div>
+
+    <script src="popup.js"></script>
+</body>
+</html>
